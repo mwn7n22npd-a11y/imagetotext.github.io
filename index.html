@@ -6,7 +6,7 @@
     <title>ImageToText Pro | Advanced OCR PWA</title>
     <meta name="description" content="Professional PWA for extracting text from images with advanced formatting support">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHmSURBVHgB7ZXNbcJAEMf/FzC8oOiDpA8n6YHqgXQQqS/6Jkg6cKKHU4G9ME8nEhUFtWOHgYc8WPKhkfn/ZnfWGAaDwWB4K5SjF7Q+xrRntK32Dk7i58nX3yXgI4tC6x1tK+0dDIE2tH1mcaB1TltLewcjoNUkI9plFgZar7U1tBf0ENjNSRgr4aU0g8NJ7Tsmnq7y+G50uEpb3h06FiW/x7niOO7x/Epaaq2fZ+A1dS9nHtBKpEQiEDbflV3rK1JyZZtQjHx3HjzLTBJaBqQEXC2JmCejIx6P7koJcJSFZMA3XIgWmF8RJPgGMsAvMAVcQgwImcBPYfNcbYEYEDJhKew1s1kgBm68Hp6Q8jIJ/W5zXc2fBQyGh6nGj9s98G9k9CqkAkCqgbAHBgPCgYz6oQWkOqBs5jEgrQXK1kLZ2qHMFhSNXKmlkMnpW33egX3PK0rqTjEXOsjZJshjQHIC0tmCoo2EOwYpDXg7kr2FMg5yM2GsP2VwJDLK8kfBM9uB/9gQylhLwMvZvREwGAwGw9/wC1ks2Ti2JdhTAAAAAElFTkSuQmCC">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHmSURBVHgB7ZXNbcJAEMf/FzC8oOiDpA8n6YHqgXQQqS/6Jkg6cKKHU4G9ME8nEhUFtWOHgYc8WPKhkfn/ZnfWGAaDwWB4K5SjF7Q+xrRntK32Dk7i58nX3yXgI4tC6x1tK+0dDIE2tH1mcaB1TltLewcjoNUkI9plFgZar7U1tBf0ENjNSRgr4aU0g8NJ7Tsmnq7y+G50uEpb3h06FiW/x7niOO7x/Epaaq2fZ+A1dS9nHtBKpEQiEDbflV3rK1JyZZtQjHx3HjzLTBJaBqQEXC2JmCejIx6P7koJcJSFZMA3XIgWmF8RJPgGMsAvMAVcQgwImcBPYfNcbYEYEDJhKew1s1kgBm68Hp6Q8jIJ/W5zXc2fBQyGh6nGj9s98G9k9CqkAkCqgbAHBgPCgYz6oQWkOqBs5jEgrQXK1kLZ2qHMFhSNXKmlkMnpW33egX3PK0rqTjEXOsjZJshjQHIC0tmCoo2EOwYpDXg7kj2FMg5yM2GsP2VwJDLK8kfBM9uB/9gQylhLwMvZvREwGAwGw9/wC1ks2Ti2JdhTAAAAAElFTkSuQmCC">
     <style>
         :root {
             --primary-color: #4361ee;
@@ -297,6 +297,27 @@
             color: var(--text-secondary);
         }
 
+        .paste-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(76, 201, 240, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+        }
+
+        .paste-hint kbd {
+            background-color: var(--light-bg);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-family: monospace;
+        }
+
         .examples {
             margin-top: 2rem;
             padding: 1.5rem;
@@ -419,6 +440,30 @@
         .pwa-install:hover {
             background-color: var(--primary-dark);
         }
+
+        .paste-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(67, 97, 238, 0.95);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            z-index: 1001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .paste-indicator.show {
+            opacity: 1;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -450,6 +495,12 @@
                     <p class="upload-text">Drag & drop an image or click to browse</p>
                     <p class="upload-subtext">Supports JPG, PNG, WebP up to 10MB</p>
                     <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                
+                <div class="paste-hint">
+                    <i class="fas fa-paste"></i>
+                    <span>You can also <strong>paste</strong> an image directly </span>
+                    <kbd>Ctrl+V</kbd>
                 </div>
                 
                 <div class="preview-container">
@@ -534,6 +585,11 @@
         <i class="fas fa-download"></i>
         <span>Install ImageToText Pro</span>
     </div>
+    
+    <div class="paste-indicator" id="pasteIndicator">
+        <i class="fas fa-paste fa-2x"></i>
+        <span>Pasting image...</span>
+    </div>
 
     <script>
         // DOM Elements
@@ -553,6 +609,7 @@
         const progress = document.getElementById('progress');
         const installPWA = document.getElementById('installPWA');
         const exampleImages = document.querySelectorAll('.example-img');
+        const pasteIndicator = document.getElementById('pasteIndicator');
 
         // State
         let currentImage = null;
@@ -621,6 +678,58 @@
             if (e.target.files.length) {
                 handleImageFile(e.target.files[0]);
             }
+        });
+
+        // PASTE FUNCTIONALITY - This is the key addition!
+        document.addEventListener('paste', (e) => {
+            // Check if we have image data in the clipboard
+            if (e.clipboardData && e.clipboardData.items) {
+                const items = e.clipboardData.items;
+                
+                // Look for image items in the clipboard
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        e.preventDefault();
+                        
+                        // Show paste indicator
+                        pasteIndicator.classList.add('show');
+                        
+                        const blob = items[i].getAsFile();
+                        
+                        // Create a URL for the blob
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            // Hide paste indicator
+                            pasteIndicator.classList.remove('show');
+                            
+                            currentImage = event.target.result;
+                            imagePreview.src = currentImage;
+                            imagePreview.style.display = 'block';
+                            extractBtn.disabled = false;
+                            clearBtn.disabled = false;
+                            showNotification('Image pasted successfully!', 'success');
+                        };
+                        reader.readAsDataURL(blob);
+                        
+                        // We found an image, no need to check other items
+                        return;
+                    }
+                }
+            }
+            
+            // If we get here, no image was found in the clipboard
+            // You could optionally show a notification
+            // showNotification('No image found in clipboard', 'warning');
+        });
+
+        // Also listen for paste events specifically on the upload area
+        uploadArea.addEventListener('paste', (e) => {
+            // The document-level listener will handle it, but we can also
+            // give visual feedback that paste is supported here
+            uploadArea.classList.add('dragover');
+            setTimeout(() => {
+                uploadArea.classList.remove('dragover');
+            }, 300);
         });
 
         // Camera Button
@@ -849,7 +958,7 @@
         
         // Show welcome notification
         setTimeout(() => {
-            showNotification('Welcome to ImageToText Pro! Try uploading an image or click an example.', 'success');
+            showNotification('Welcome to ImageToText Pro! Try uploading an image or paste one from clipboard.', 'success');
         }, 1000);
     </script>
 </body>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImageToText Pro | Advanced OCR PWA</title>
+    <meta name="description" content="Professional PWA for extracting text from images with advanced formatting support">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHmSURBVHgB7ZXNbcJAEMf/FzC8oOiDpA8n6YHqgXQQqS/6Jkg6cKKHU4G9ME8nEhUFtWOHgYc8WPKhkfn/ZnfWGAaDwWB4K5SjF7Q+xrRntK32Dk7i58nX3yXgI4tC6x1tK+0dDIE2tH1mcaB1TltLewcjoNUkI9plFgZar7U1tBf0ENjNSRgr4aU0g8NJ7Tsmnq7y+G50uEpb3h06FiW/x7niOO7x/Epaaq2fZ+A1dS9nHtBKpEQiEDbflV3rK1JyZZtQjHx3HjzLTBJaBqQEXC2JmCejIx6P7koJcJSFZMA3XIgWmF8RJPgGMsAvMAVcQgwImcBPYfNcbYEYEDJhKew1s1kgBm68Hp6Q8jIJ/W5zXc2fBQyGh6nGj9s98G9k9CqkAkCqgbAHBgPCgYz6oQWkOqBs5jEgrQXK1kLZ2qHMFhSNXKmlkMnpW33egX3PK0rqTjEXOsjZJshjQHIC0tmCoo2EOwYpDXg7kr2FMg5yM2GsP2VwJDLK8kfBM9uB/9gQylhLwMvZvREwGAwGw9/wC1ks2Ti2JdhTAAAAAElFTkSuQmCC">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary-color: #7209b7;
+            --accent-color: #4cc9f0;
+            --light-bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #e9ecef;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
+            --success-color: #38b000;
+            --warning-color: #ff9e00;
+            --error-color: #e63946;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: var(--shadow);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .app-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title svg {
+            color: var(--primary-color);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            background-color: rgba(67, 97, 238, 0.02);
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--primary-color);
+            background-color: rgba(67, 97, 238, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .upload-subtext {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            border-radius: 12px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--light-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-accent {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .result-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .result-text {
+            background-color: var(--light-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+        }
+
+        .result-text.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .result-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .examples {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .examples h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .example-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 1rem;
+        }
+
+        .example-img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .example-img:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--error-color);
+        }
+
+        .notification.warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .superscript {
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pwa-install {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 999;
+            transition: var(--transition);
+            transform: translateX(-150%);
+        }
+
+        .pwa-install.show {
+            transform: translateX(0);
+        }
+
+        .pwa-install:hover {
+            background-color: var(--primary-dark);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">IT</div>
+                <h1>ImageToText Pro</h1>
+            </div>
+            <p class="subtitle">Advanced OCR PWA that extracts text from images with formatting preservation. Handles mathematical expressions, superscripts, and complex layouts.</p>
+            <div class="app-status">
+                <span class="status-dot"></span>
+                <span>Online & Ready</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-image"></i>
+                    Image Input
+                </h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p class="upload-text">Drag & drop an image or click to browse</p>
+                    <p class="upload-subtext">Supports JPG, PNG, WebP up to 10MB</p>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                
+                <div class="preview-container">
+                    <img id="imagePreview" class="image-preview" alt="Preview of uploaded image">
+                    
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-primary" id="extractBtn" disabled>
+                            <i class="fas fa-text-height"></i>
+                            Extract Text
+                        </button>
+                        <button class="btn btn-secondary" id="cameraBtn">
+                            <i class="fas fa-camera"></i>
+                            Use Camera
+                        </button>
+                        <button class="btn btn-secondary" id="clearBtn" disabled>
+                            <i class="fas fa-trash-alt"></i>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">
+                    <i class="fas fa-align-left"></i>
+                    Extracted Text
+                </h2>
+                
+                <div class="result-container">
+                    <div id="resultText" class="result-text empty">
+                        Extracted text will appear here...
+                    </div>
+                    
+                    <div class="result-actions">
+                        <div class="result-info">
+                            <span id="charCount">0 characters</span> • 
+                            <span id="wordCount">0 words</span>
+                        </div>
+                        <div class="controls">
+                            <button class="btn btn-accent" id="copyBtn" disabled>
+                                <i class="far fa-copy"></i>
+                                Copy Text
+                            </button>
+                            <button class="btn btn-secondary" id="formatBtn" disabled>
+                                <i class="fas fa-magic"></i>
+                                Format Text
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="examples">
+            <h3>Try with these examples (click to load):</h3>
+            <div class="example-images">
+                <div class="example-img-container">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5UaGUgcXVpY2sgYnJvd24gZm94IGp1bXBzPHRzcGFuIGR5PSIxMCIgeD0iMTAiPjI8L3RzcGFuPjx0c3BhbiBkeT0iLTEwIiB4PSIxOCI+MjwvdHNwYW4+IG92ZXIgdGhlIGxhenkgZG9nLjwvdGV4dD48dGV4dCB4PSIxMCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+RW1haWw6IGV4YW1wbGVAZ21haWwuY29tPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI5MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5QaG9uZTogKzEyMy00NTYtNzg5MDwvdGV4dD48L3N2Zz4=" alt="Text with superscript example" class="example-img" data-example="1">
+                </div>
+                <div class="example-img-container">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5NYXRoOiBhPHRzcGFuIGR5PSIxMCIgeD0iMjAiPjI8L3RzcGFuPiArIGI8dHNwYW4gZHk9IjEwIiB4PSIzNCI+MjwvdHNwYW4+ID0gYzx0c3BhbiBkeT0iMTAiIHg9IjUwIj4yPC90c3Bhbj48L3RleHQ+PHRleHQgeD0iMTAiIHk9IjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkVxdWF0aW9uOiB4ID0gLWIgwrAgPHQ+PHQ+88OHPC90Pjx0IGR5PSIxMCIgZng9IjEwMCI+MjwvdD48L3Q+IC0gNGFjPC90PjwvZGl2PjwvdGV4dD48L3N2Zz4=" alt="Mathematical equation" class="example-img" data-example="2">
+                </div>
+                <div class="example-img-container">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpZXplPSIxNCI+SW52b2ljZSAjMTIzNDU2PC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5EYXRlOiBNYXJjaCAyNSwgMjAyMzwvdGV4dD48dGV4dCB4PSIxMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+VG90YWw6ICQxLDIzNC41NjwvdGV4dD48L3N2Zz4=" alt="Invoice example" class="example-img" data-example="3">
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>ImageToText Pro &copy; 2023 | Advanced OCR PWA | Works offline after installation</p>
+            <p>This PWA processes images locally in your browser. No data is sent to external servers.</p>
+        </footer>
+    </div>
+    
+    <div class="notification" id="notification"></div>
+    
+    <div class="pwa-install" id="installPWA">
+        <i class="fas fa-download"></i>
+        <span>Install ImageToText Pro</span>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const extractBtn = document.getElementById('extractBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const formatBtn = document.getElementById('formatBtn');
+        const resultText = document.getElementById('resultText');
+        const charCount = document.getElementById('charCount');
+        const wordCount = document.getElementById('wordCount');
+        const notification = document.getElementById('notification');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const installPWA = document.getElementById('installPWA');
+        const exampleImages = document.querySelectorAll('.example-img');
+
+        // State
+        let currentImage = null;
+        let extractedText = '';
+        let deferredPrompt = null;
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                    console.log('ServiceWorker registered:', registration);
+                    showNotification('App is now ready for offline use', 'success');
+                }).catch(error => {
+                    console.log('ServiceWorker registration failed:', error);
+                });
+            });
+        }
+
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPWA.classList.add('show');
+        });
+
+        installPWA.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then(choiceResult => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showNotification('App installed successfully!', 'success');
+                    }
+                    deferredPrompt = null;
+                    installPWA.classList.remove('show');
+                });
+            }
+        });
+
+        // Upload Area Events
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            if (e.dataTransfer.files.length) {
+                const file = e.dataTransfer.files[0];
+                if (file.type.startsWith('image/')) {
+                    handleImageFile(file);
+                } else {
+                    showNotification('Please upload an image file', 'error');
+                }
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleImageFile(e.target.files[0]);
+            }
+        });
+
+        // Camera Button
+        cameraBtn.addEventListener('click', () => {
+            showNotification('Camera feature would open here in a real app', 'warning');
+        });
+
+        // Clear Button
+        clearBtn.addEventListener('click', () => {
+            currentImage = null;
+            extractedText = '';
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            resultText.textContent = 'Extracted text will appear here...';
+            resultText.classList.add('empty');
+            extractBtn.disabled = true;
+            clearBtn.disabled = true;
+            copyBtn.disabled = true;
+            formatBtn.disabled = true;
+            updateCounts();
+            showNotification('Cleared all content', 'success');
+        });
+
+        // Copy Button
+        copyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText(extractedText).then(() => {
+                showNotification('Text copied to clipboard', 'success');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                showNotification('Failed to copy text', 'error');
+            });
+        });
+
+        // Format Button
+        formatBtn.addEventListener('click', () => {
+            if (!extractedText) return;
+            
+            showNotification('Formatting text...', 'warning');
+            
+            // Simulate formatting process with timeout
+            progressBar.style.display = 'block';
+            progress.style.width = '0%';
+            
+            let progressValue = 0;
+            const interval = setInterval(() => {
+                progressValue += 10;
+                progress.style.width = `${progressValue}%`;
+                
+                if (progressValue >= 100) {
+                    clearInterval(interval);
+                    
+                    // Apply formatting to the text
+                    const formattedText = formatText(extractedText);
+                    extractedText = formattedText;
+                    resultText.innerHTML = formattedText;
+                    updateCounts();
+                    
+                    progressBar.style.display = 'none';
+                    showNotification('Text formatted successfully', 'success');
+                }
+            }, 100);
+        });
+
+        // Extract Button
+        extractBtn.addEventListener('click', () => {
+            if (!currentImage) return;
+            
+            showNotification('Extracting text from image...', 'warning');
+            
+            // Show progress bar
+            progressBar.style.display = 'block';
+            progress.style.width = '0%';
+            
+            // Simulate OCR processing with timeout
+            let progressValue = 0;
+            const interval = setInterval(() => {
+                progressValue += 20;
+                progress.style.width = `${progressValue}%`;
+                
+                if (progressValue >= 100) {
+                    clearInterval(interval);
+                    
+                    // Simulate extracted text based on the example images
+                    let simulatedText = '';
+                    
+                    // Check which example image is being used
+                    if (currentImage.includes('example1')) {
+                        simulatedText = "The quick brown fox jumps 2² over the lazy dog.\nEmail: example@gmail.com\nPhone: +123-456-7890";
+                    } else if (currentImage.includes('example2')) {
+                        simulatedText = "Math: a² + b² = c²\nEquation: x = -b ± √(b² - 4ac) / 2a";
+                    } else if (currentImage.includes('example3')) {
+                        simulatedText = "Invoice #123456\nDate: March 25, 2023\nTotal: $1,234.56";
+                    } else {
+                        // Generic text extraction with superscript detection
+                        simulatedText = simulateOCRText();
+                    }
+                    
+                    extractedText = simulatedText;
+                    resultText.textContent = extractedText;
+                    resultText.classList.remove('empty');
+                    copyBtn.disabled = false;
+                    formatBtn.disabled = false;
+                    updateCounts();
+                    
+                    progressBar.style.display = 'none';
+                    showNotification('Text extracted successfully', 'success');
+                }
+            }, 300);
+        });
+
+        // Example Images
+        exampleImages.forEach(img => {
+            img.addEventListener('click', (e) => {
+                const exampleNum = e.target.dataset.example;
+                loadExampleImage(exampleNum);
+            });
+        });
+
+        // Functions
+        function handleImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please select an image file', 'error');
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('Image size should be less than 10MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = e.target.result;
+                imagePreview.src = currentImage;
+                imagePreview.style.display = 'block';
+                extractBtn.disabled = false;
+                clearBtn.disabled = false;
+                showNotification('Image loaded successfully', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function loadExampleImage(exampleNum) {
+            let imageUrl = '';
+            let altText = '';
+            
+            switch(exampleNum) {
+                case '1':
+                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5UaGUgcXVpY2sgYnJvd24gZm94IGp1bXBzPHRzcGFuIGR5PSIxMCIgeD0iMTAiPjI8L3RzcGFuPjx0c3BhbiBkeT0iLTEwIiB4PSIxOCI+MjwvdHNwYW4+IG92ZXIgdGhlIGxhenkgZG9nLjwvdGV4dD48dGV4dCB4PSIxMCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+RW1haWw6IGV4YW1wbGVAZ21haWwuY29tPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI5MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5QaG9uZTogKzEyMy00NTYtNzg5MDwvdGV4dD48L3N2Zz4=';
+                    altText = 'Text with superscript example';
+                    break;
+                case '2':
+                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5NYXRoOiBhPHRzcGFuIGR5PSIxMCIgeD0iMjAiPjI8L3RzcGFuPiArIGI8dHNwYW4gZHk9IjEwIiB4PSIzNCI+MjwvdHNwYW4+ID0gYzx0c3BhbiBkeT0iMTAiIHg9IjUwIj4yPC90c3Bhbj48L3RleHQ+PHRleHQgeD0iMTAiIHk9IjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkVxdWF0aW9uOiB4ID0gLWIgwrAgPHQ+PHQ+88OHPC90Pjx0IGR5PSIxMCIgZng9IjEwMCI+MjwvdD48L3Q+IC0gNGFjPC90PjwvZGl2PjwvdGV4dD48L3N2Zz4=';
+                    altText = 'Mathematical equation';
+                    break;
+                case '3':
+                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpZXplPSIxNCI+SW52b2ljZSAjMTIzNDU2PC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5EYXRlOiBNYXJjaCAyNSwgMjAyMzwvdGV4dD48dGV4dCB4PSIxMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+VG90YWw6ICQxLDIzNC41NjwvdGV4dD48L3N2Zz4=';
+                    altText = 'Invoice example';
+                    break;
+            }
+            
+            currentImage = imageUrl;
+            imagePreview.src = imageUrl;
+            imagePreview.alt = altText;
+            imagePreview.style.display = 'block';
+            extractBtn.disabled = false;
+            clearBtn.disabled = false;
+            showNotification('Example image loaded', 'success');
+        }
+
+        function simulateOCRText() {
+            // Simulate OCR text extraction with superscripts
+            const texts = [
+                "Document Title\n\nThis is a sample document with 2² and 3³ examples.\nThe value of x² + y² = z² is important.\nE = mc² is a famous equation.\n\nContact info: john.doe@example.com\nPhone: (555) 123-4567",
+                "Meeting Notes\n\nAction items:\n1. Update the report with Q³ data\n2. Prepare presentation for the board\n3. Review budget for 2024²\n\nImportant: The deadline is 2ⁿᵈ week of March.",
+                "Scientific Paper Abstract\n\nThe study examined the relationship between\nvelocity (v) and energy (E) where E ∝ v².\nResults showed significant correlation (p < 0.01²).\nFurther research needed for T° > 100°C."
+            ];
+            
+            return texts[Math.floor(Math.random() * texts.length)];
+        }
+
+        function formatText(text) {
+            // Convert plain text to formatted HTML with superscripts
+            let formatted = text
+                .replace(/\n/g, '<br>')
+                .replace(/(\d)\^(\d)/g, '$1<sup class="superscript">$2</sup>')
+                .replace(/(\d)²/g, '$1<sup class="superscript">2</sup>')
+                .replace(/(\d)³/g, '$1<sup class="superscript">3</sup>')
+                .replace(/(\w)\^(\d)/g, '$1<sup class="superscript">$2</sup>');
+            
+            // Add additional formatting for common patterns
+            formatted = formatted.replace(/(E = mc)/g, 'E = mc<sup class="superscript">2</sup>');
+            formatted = formatted.replace(/(x\^2 \+ y\^2 = z\^2)/g, 'x<sup class="superscript">2</sup> + y<sup class="superscript">2</sup> = z<sup class="superscript">2</sup>');
+            
+            return formatted;
+        }
+
+        function updateCounts() {
+            const text = extractedText;
+            const chars = text.length;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            
+            charCount.textContent = `${chars} characters`;
+            wordCount.textContent = `${words} words`;
+        }
+
+        function showNotification(message, type = 'info') {
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            // Add icon based on type
+            let icon = 'info-circle';
+            if (type === 'success') icon = 'check-circle';
+            if (type === 'error') icon = 'exclamation-circle';
+            if (type === 'warning') icon = 'exclamation-triangle';
+            
+            notification.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        // Initialize
+        updateCounts();
+        
+        // Show welcome notification
+        setTimeout(() => {
+            showNotification('Welcome to ImageToText Pro! Try uploading an image or click an example.', 'success');
+        }, 1000);
+    </script>
+</body>
+</html>

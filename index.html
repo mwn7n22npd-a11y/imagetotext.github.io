@@ -3,40 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImageToText Pro | Advanced OCR PWA</title>
-    <meta name="description" content="Professional PWA for extracting text from images with advanced formatting support">
+    <title>OCR Pro | Advanced Image to Text Converter</title>
+    <meta name="description" content="Professional PWA for extracting text from images using Tesseract.js OCR">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAHmSURBVHgB7ZXNbcJAEMf/FzC8oOiDpA8n6YHqgXQQqS/6Jkg6cKKHU4G9ME8nEhUFtWOHgYc8WPKhkfn/ZnfWGAaDwWB4K5SjF7Q+xrRntK32Dk7i58nX3yXgI4tC6x1tK+0dDIE2tH1mcaB1TltLewcjoNUkI9plFgZar7U1tBf0ENjNSRgr4aU0g8NJ7Tsmnq7y+G50uEpb3h06FiW/x7niOO7x/Epaaq2fZ+A1dS9nHtBKpEQiEDbflV3rK1JyZZtQjHx3HjzLTBJaBqQEXC2JmCejIx6P7koJcJSFZMA3XIgWmF8RJPgGMsAvMAVcQgwImcBPYfNcbYEYEDJhKew1s1kgBm68Hp6Q8jIJ/W5zXc2fBQyGh6nGj9s98G9k9CqkAkCqgbAHBgPCgYz6oQWkOqBs5jEgrQXK1kLZ2qHMFhSNXKmlkMnpW33egX3PK0rqTjEXOsjZJshjQHIC0tmCoo2EOwYpDXg7kj2FMg5yM2GsP2VwJDLK8kfBM9uB/9gQylhLwMvZvREwGAwGw9/wC1ks2Ti2JdhTAAAAAElFTkSuQmCC">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFdSURBVHgB7ZXRbcMwDEQdZ4B2lA7SjdJR2lG6UTaKJ4onShcKFwoR/YAPUiSdEzt2kvsAIpZl8ngkRYqiKP8Sd/eB5PL4NDCdzmQDXZRw5ZIB78iR32QO9NkP/gkPoA+6ABN5b0Muvh+RbB4F9UJfQLkGc6sSu+uFflAeeZ6qUzY2oM8nssgF+M5CCeUT6S0k19sP8EsK1w8is6cY4JYCcKZcfGcL+LUAcKC+ifod5YbPJjKsBV4oJ9/lr0+J31M/fqM1MAekjWw2AtcaLk0g2hx1uw1g7aA4cj97wXpPBr4LIH1gG8E3AKgWtFpAi2e1YHMAlos4iG+tAbY3IExMbc0ikYdaww7o10qg0fRG7acfumV04Zg/Ht0oI/ymQ4M4u2bKGpA7c5wVttZK1gIq7l9x+LhXAn0uPkf5BdtHX4uiKIqiKIqiKMqf4gduzRB4kQaJtAAAAABJRU5ErkJggg==">
+    
+    <!-- Tesseract.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    
     <style>
         :root {
-            --primary-color: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary-color: #7209b7;
-            --accent-color: #4cc9f0;
-            --light-bg: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --border-color: #e9ecef;
-            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.12);
-            --success-color: #38b000;
-            --warning-color: #ff9e00;
-            --error-color: #e63946;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #7c3aed;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --radius: 12px;
+            --transition: all 0.3s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: var(--light-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
+            background: linear-gradient(135deg, #f0f9ff 0%, #fef7ff 100%);
+            color: var(--dark);
             min-height: 100vh;
             padding: 20px;
         }
@@ -46,80 +47,61 @@
             margin: 0 auto;
         }
 
+        /* Header */
         header {
             text-align: center;
-            padding: 2rem 1rem;
-            margin-bottom: 2rem;
+            padding: 30px 20px;
+            margin-bottom: 30px;
         }
 
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 12px;
-            margin-bottom: 1rem;
+            background: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
         }
 
         .logo-icon {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 24px;
-            font-weight: 700;
-            box-shadow: var(--shadow);
+            font-size: 20px;
+            font-weight: bold;
         }
 
         h1 {
             font-size: 2.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            margin-bottom: 0.5rem;
+            margin-bottom: 10px;
         }
 
         .subtitle {
+            color: var(--gray);
             font-size: 1.1rem;
-            color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
+            line-height: 1.6;
         }
 
-        .app-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--success-color);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
+        /* Main Layout */
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 30px;
-            margin-bottom: 2rem;
+            margin-bottom: 40px;
         }
 
         @media (max-width: 900px) {
@@ -128,82 +110,109 @@
             }
         }
 
+        /* Cards */
         .card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
+            background: white;
+            border-radius: var(--radius);
             padding: 30px;
             box-shadow: var(--shadow);
             transition: var(--transition);
-            height: 100%;
         }
 
         .card:hover {
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
         }
 
         .card-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--dark);
         }
 
-        .card-title svg {
-            color: var(--primary-color);
+        .card-title i {
+            color: var(--primary);
         }
 
+        /* Upload Area */
         .upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            padding: 3rem 2rem;
+            border: 3px dashed var(--gray-light);
+            border-radius: var(--radius);
+            padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition);
-            margin-bottom: 1.5rem;
-            background-color: rgba(67, 97, 238, 0.02);
+            margin-bottom: 25px;
+            background: #fafafa;
         }
 
         .upload-area:hover, .upload-area.dragover {
-            border-color: var(--primary-color);
-            background-color: rgba(67, 97, 238, 0.05);
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.03);
         }
 
         .upload-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
         }
 
         .upload-text {
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-size: 1.1rem;
         }
 
         .upload-subtext {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
         }
 
-        .file-input {
-            display: none;
+        .paste-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(37, 99, 235, 0.08);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            margin-top: 15px;
         }
 
+        .paste-hint kbd {
+            background: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--gray-light);
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        /* Image Preview */
         .preview-container {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 20px;
         }
 
         .image-preview {
-            max-width: 100%;
-            border-radius: 12px;
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: var(--radius);
             display: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
+        /* Controls */
         .controls {
             display: flex;
             gap: 12px;
@@ -212,44 +221,45 @@
 
         .btn {
             padding: 12px 24px;
-            border-radius: 10px;
+            border-radius: 8px;
             border: none;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            font-size: 1rem;
         }
 
         .btn-primary {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
         }
 
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
         .btn-secondary {
-            background-color: var(--light-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--gray-light);
         }
 
-        .btn-secondary:hover {
-            background-color: var(--border-color);
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--gray-light);
         }
 
-        .btn-accent {
-            background-color: var(--accent-color);
+        .btn-success {
+            background: var(--success);
             color: white;
         }
 
-        .btn-accent:hover {
-            opacity: 0.9;
+        .btn-success:hover:not(:disabled) {
+            background: #0da271;
             transform: translateY(-2px);
         }
 
@@ -259,31 +269,35 @@
             transform: none !important;
         }
 
+        /* Result Area */
         .result-container {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 20px;
+            height: 100%;
         }
 
         .result-text {
-            background-color: var(--light-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            min-height: 200px;
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 25px;
+            min-height: 300px;
             max-height: 400px;
             overflow-y: auto;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            border: 1px solid var(--border-color);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            border: 1px solid var(--gray-light);
             white-space: pre-wrap;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
         }
 
         .result-text.empty {
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            color: var(--gray);
             font-style: italic;
+            text-align: center;
         }
 
         .result-actions {
@@ -294,143 +308,166 @@
 
         .result-info {
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            color: var(--gray);
         }
 
-        .paste-hint {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            padding: 10px;
-            background-color: rgba(76, 201, 240, 0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            color: var(--primary-color);
-        }
-
-        .paste-hint kbd {
-            background-color: var(--light-bg);
-            padding: 3px 8px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            font-family: monospace;
-        }
-
-        .examples {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .examples h3 {
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-        }
-
-        .example-images {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 1rem;
-        }
-
-        .example-img {
-            width: 100%;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-
-        .example-img:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-color);
-        }
-
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--card-bg);
-            padding: 15px 20px;
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 1000;
-        }
-
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .notification.success {
-            border-left: 4px solid var(--success-color);
-        }
-
-        .notification.error {
-            border-left: 4px solid var(--error-color);
-        }
-
-        .notification.warning {
-            border-left: 4px solid var(--warning-color);
-        }
-
-        .progress-bar {
-            height: 4px;
-            background-color: var(--border-color);
-            border-radius: 2px;
+        /* Progress Bar */
+        .progress-container {
+            background: var(--gray-light);
+            border-radius: 20px;
+            height: 8px;
             overflow: hidden;
-            margin-top: 1rem;
+            margin-top: 15px;
             display: none;
         }
 
-        .progress {
+        .progress-bar {
             height: 100%;
-            background-color: var(--primary-color);
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
             width: 0%;
             transition: width 0.3s ease;
+            border-radius: 20px;
         }
 
-        .superscript {
-            font-size: 0.7em;
-            vertical-align: super;
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--gray);
         }
 
+        /* Examples Section */
+        .examples-section {
+            background: white;
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .examples-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .example-card {
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--light);
+        }
+
+        .example-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .example-icon {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .example-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .example-desc {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
         footer {
             text-align: center;
-            padding: 2rem 0;
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin-top: 2rem;
-            border-top: 1px solid var(--border-color);
+            padding: 30px 20px;
+            color: var(--gray);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--gray-light);
+            margin-top: 40px;
         }
 
-        .pwa-install {
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .footer-link {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Notifications */
+        .notification {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
+            bottom: 30px;
+            right: 30px;
+            background: white;
+            padding: 18px 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-width: 350px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left-color: var(--success);
+        }
+
+        .notification.error {
+            border-left-color: var(--danger);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        /* PWA Install Prompt */
+        .pwa-install {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            gap: 12px;
             box-shadow: var(--shadow);
             cursor: pointer;
             z-index: 999;
-            transition: var(--transition);
             transform: translateX(-150%);
+            transition: transform 0.3s ease;
         }
 
         .pwa-install.show {
@@ -438,31 +475,29 @@
         }
 
         .pwa-install:hover {
-            background-color: var(--primary-dark);
+            opacity: 0.9;
         }
 
-        .paste-indicator {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(67, 97, 238, 0.95);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            z-index: 1001;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(37, 99, 235, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .paste-indicator.show {
-            opacity: 1;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Superscript Styling */
+        .superscript {
+            font-size: 0.7em;
+            vertical-align: super;
+            font-weight: bold;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -471,65 +506,58 @@
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">IT</div>
-                <h1>ImageToText Pro</h1>
+                <div class="logo-icon">OCR</div>
+                <h1>OCR Pro</h1>
             </div>
-            <p class="subtitle">Advanced OCR PWA that extracts text from images with formatting preservation. Handles mathematical expressions, superscripts, and complex layouts.</p>
-            <div class="app-status">
-                <span class="status-dot"></span>
-                <span>Online & Ready</span>
-            </div>
+            <p class="subtitle">Advanced image-to-text converter using Tesseract.js. Extract accurate text from images, screenshots, and documents with superscript support.</p>
         </header>
 
         <div class="main-content">
+            <!-- Image Input Card -->
             <div class="card">
                 <h2 class="card-title">
-                    <i class="fas fa-image"></i>
-                    Image Input
+                    <i class="fas fa-upload"></i>
+                    Upload Image
                 </h2>
                 
                 <div class="upload-area" id="uploadArea">
                     <div class="upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <p class="upload-text">Drag & drop an image or click to browse</p>
-                    <p class="upload-subtext">Supports JPG, PNG, WebP up to 10MB</p>
-                    <input type="file" id="fileInput" class="file-input" accept="image/*">
-                </div>
-                
-                <div class="paste-hint">
-                    <i class="fas fa-paste"></i>
-                    <span>You can also <strong>paste</strong> an image directly </span>
-                    <kbd>Ctrl+V</kbd>
+                    <p class="upload-text">Drag & drop image or click to browse</p>
+                    <p class="upload-subtext">Supports JPG, PNG, WebP, GIF, BMP up to 10MB</p>
+                    <div class="paste-hint">
+                        <i class="fas fa-paste"></i>
+                        <span>Or paste image with <kbd>Ctrl+V</kbd></span>
+                    </div>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*" style="display: none;">
                 </div>
                 
                 <div class="preview-container">
-                    <img id="imagePreview" class="image-preview" alt="Preview of uploaded image">
+                    <img id="imagePreview" class="image-preview" alt="Image preview">
                     
-                    <div class="progress-bar" id="progressBar">
-                        <div class="progress" id="progress"></div>
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-bar" id="progressBar"></div>
                     </div>
+                    <div class="progress-text" id="progressText"></div>
                     
                     <div class="controls">
                         <button class="btn btn-primary" id="extractBtn" disabled>
                             <i class="fas fa-text-height"></i>
                             Extract Text
                         </button>
-                        <button class="btn btn-secondary" id="cameraBtn">
-                            <i class="fas fa-camera"></i>
-                            Use Camera
-                        </button>
                         <button class="btn btn-secondary" id="clearBtn" disabled>
-                            <i class="fas fa-trash-alt"></i>
+                            <i class="fas fa-times"></i>
                             Clear
                         </button>
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Result Card -->
             <div class="card">
                 <h2 class="card-title">
-                    <i class="fas fa-align-left"></i>
+                    <i class="fas fa-file-alt"></i>
                     Extracted Text
                 </h2>
                 
@@ -540,55 +568,82 @@
                     
                     <div class="result-actions">
                         <div class="result-info">
-                            <span id="charCount">0 characters</span> • 
-                            <span id="wordCount">0 words</span>
+                            <span id="charCount">0 chars</span> • 
+                            <span id="wordCount">0 words</span> • 
+                            <span id="language">English</span>
                         </div>
                         <div class="controls">
-                            <button class="btn btn-accent" id="copyBtn" disabled>
+                            <button class="btn btn-success" id="copyBtn" disabled>
                                 <i class="far fa-copy"></i>
-                                Copy Text
+                                Copy
                             </button>
-                            <button class="btn btn-secondary" id="formatBtn" disabled>
-                                <i class="fas fa-magic"></i>
-                                Format Text
+                            <button class="btn btn-secondary" id="clearTextBtn" disabled>
+                                <i class="fas fa-eraser"></i>
+                                Clear
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="examples">
-            <h3>Try with these examples (click to load):</h3>
-            <div class="example-images">
-                <div class="example-img-container">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5UaGUgcXVpY2sgYnJvd24gZm94IGp1bXBzPHRzcGFuIGR5PSIxMCIgeD0iMTAiPjI8L3RzcGFuPjx0c3BhbiBkeT0iLTEwIiB4PSIxOCI+MjwvdHNwYW4+IG92ZXIgdGhlIGxhenkgZG9nLjwvdGV4dD48dGV4dCB4PSIxMCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+RW1haWw6IGV4YW1wbGVAZ21haWwuY29tPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI5MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5QaG9uZTogKzEyMy00NTYtNzg5MDwvdGV4dD48L3N2Zz4=" alt="Text with superscript example" class="example-img" data-example="1">
+
+        <!-- Examples Section -->
+        <div class="examples-section">
+            <h3>Try with these example images:</h3>
+            <div class="example-grid">
+                <div class="example-card" data-example="math">
+                    <div class="example-icon">
+                        <i class="fas fa-square-root-alt"></i>
+                    </div>
+                    <h4 class="example-title">Mathematical Formulas</h4>
+                    <p class="example-desc">Extract equations with superscripts like 2², x³, etc.</p>
                 </div>
-                <div class="example-img-container">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5NYXRoOiBhPHRzcGFuIGR5PSIxMCIgeD0iMjAiPjI8L3RzcGFuPiArIGI8dHNwYW4gZHk9IjEwIiB4PSIzNCI+MjwvdHNwYW4+ID0gYzx0c3BhbiBkeT0iMTAiIHg9IjUwIj4yPC90c3Bhbj48L3RleHQ+PHRleHQgeD0iMTAiIHk9IjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkVxdWF0aW9uOiB4ID0gLWIgwrAgPHQ+PHQ+88OHPC90Pjx0IGR5PSIxMCIgZng9IjEwMCI+MjwvdD48L3Q+IC0gNGFjPC90PjwvZGl2PjwvdGV4dD48L3N2Zz4=" alt="Mathematical equation" class="example-img" data-example="2">
+                
+                <div class="example-card" data-example="document">
+                    <div class="example-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <h4 class="example-title">Documents</h4>
+                    <p class="example-desc">Extract text from scanned documents and PDF screenshots</p>
                 </div>
-                <div class="example-img-container">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpZXplPSIxNCI+SW52b2ljZSAjMTIzNDU2PC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5EYXRlOiBNYXJjaCAyNSwgMjAyMzwvdGV4dD48dGV4dCB4PSIxMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+VG90YWw6ICQxLDIzNC41NjwvdGV4dD48L3N2Zz4=" alt="Invoice example" class="example-img" data-example="3">
+                
+                <div class="example-card" data-example="handwritten">
+                    <div class="example-icon">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <h4 class="example-title">Handwritten Notes</h4>
+                    <p class="example-desc">Try with clear handwritten text (English)</p>
+                </div>
+                
+                <div class="example-card" data-example="screenshot">
+                    <div class="example-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h4 class="example-title">Screenshots</h4>
+                    <p class="example-desc">Extract text from screenshots and web images</p>
                 </div>
             </div>
         </div>
-        
+
+        <!-- Footer -->
         <footer>
-            <p>ImageToText Pro &copy; 2023 | Advanced OCR PWA | Works offline after installation</p>
-            <p>This PWA processes images locally in your browser. No data is sent to external servers.</p>
+            <p>OCR Pro &copy; 2023 | Advanced Image to Text Converter</p>
+            <p>Powered by Tesseract.js • Works completely offline after installation</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link" id="privacyLink">Privacy Policy</a>
+                <a href="#" class="footer-link" id="aboutLink">About</a>
+                <a href="#" class="footer-link" id="githubLink">GitHub</a>
+            </div>
         </footer>
     </div>
-    
+
+    <!-- Notification -->
     <div class="notification" id="notification"></div>
-    
+
+    <!-- PWA Install Prompt -->
     <div class="pwa-install" id="installPWA">
         <i class="fas fa-download"></i>
-        <span>Install ImageToText Pro</span>
-    </div>
-    
-    <div class="paste-indicator" id="pasteIndicator">
-        <i class="fas fa-paste fa-2x"></i>
-        <span>Pasting image...</span>
+        <span>Install OCR Pro App</span>
     </div>
 
     <script>
@@ -597,57 +652,49 @@
         const fileInput = document.getElementById('fileInput');
         const imagePreview = document.getElementById('imagePreview');
         const extractBtn = document.getElementById('extractBtn');
-        const cameraBtn = document.getElementById('cameraBtn');
         const clearBtn = document.getElementById('clearBtn');
         const copyBtn = document.getElementById('copyBtn');
-        const formatBtn = document.getElementById('formatBtn');
+        const clearTextBtn = document.getElementById('clearTextBtn');
         const resultText = document.getElementById('resultText');
         const charCount = document.getElementById('charCount');
         const wordCount = document.getElementById('wordCount');
+        const languageSpan = document.getElementById('language');
         const notification = document.getElementById('notification');
+        const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
-        const progress = document.getElementById('progress');
+        const progressText = document.getElementById('progressText');
         const installPWA = document.getElementById('installPWA');
-        const exampleImages = document.querySelectorAll('.example-img');
-        const pasteIndicator = document.getElementById('pasteIndicator');
+        const exampleCards = document.querySelectorAll('.example-card');
 
         // State
         let currentImage = null;
         let extractedText = '';
         let deferredPrompt = null;
+        let isProcessing = false;
+        let currentLanguage = 'eng';
 
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js').then(registration => {
-                    console.log('ServiceWorker registered:', registration);
-                    showNotification('App is now ready for offline use', 'success');
-                }).catch(error => {
-                    console.log('ServiceWorker registration failed:', error);
-                });
-            });
-        }
+        // Languages supported by Tesseract
+        const languages = {
+            'eng': 'English',
+            'spa': 'Spanish',
+            'fra': 'French',
+            'deu': 'German',
+            'ita': 'Italian',
+            'por': 'Portuguese',
+            'rus': 'Russian',
+            'chi_sim': 'Chinese Simplified',
+            'jpn': 'Japanese',
+            'kor': 'Korean'
+        };
 
-        // PWA Installation
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installPWA.classList.add('show');
+        // Initialize Tesseract
+        const worker = Tesseract.createWorker({
+            logger: m => handleTesseractProgress(m)
         });
 
-        installPWA.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then(choiceResult => {
-                    if (choiceResult.outcome === 'accepted') {
-                        showNotification('App installed successfully!', 'success');
-                    }
-                    deferredPrompt = null;
-                    installPWA.classList.remove('show');
-                });
-            }
-        });
-
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        
         // Upload Area Events
         uploadArea.addEventListener('click', () => fileInput.click());
         
@@ -666,11 +713,7 @@
             
             if (e.dataTransfer.files.length) {
                 const file = e.dataTransfer.files[0];
-                if (file.type.startsWith('image/')) {
-                    handleImageFile(file);
-                } else {
-                    showNotification('Please upload an image file', 'error');
-                }
+                handleImageFile(file);
             }
         });
 
@@ -680,175 +723,97 @@
             }
         });
 
-        // PASTE FUNCTIONALITY - This is the key addition!
+        // Paste functionality
         document.addEventListener('paste', (e) => {
-            // Check if we have image data in the clipboard
-            if (e.clipboardData && e.clipboardData.items) {
-                const items = e.clipboardData.items;
-                
-                // Look for image items in the clipboard
-                for (let i = 0; i < items.length; i++) {
-                    if (items[i].type.indexOf('image') !== -1) {
-                        e.preventDefault();
-                        
-                        // Show paste indicator
-                        pasteIndicator.classList.add('show');
-                        
-                        const blob = items[i].getAsFile();
-                        
-                        // Create a URL for the blob
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            // Hide paste indicator
-                            pasteIndicator.classList.remove('show');
-                            
-                            currentImage = event.target.result;
-                            imagePreview.src = currentImage;
-                            imagePreview.style.display = 'block';
-                            extractBtn.disabled = false;
-                            clearBtn.disabled = false;
-                            showNotification('Image pasted successfully!', 'success');
-                        };
-                        reader.readAsDataURL(blob);
-                        
-                        // We found an image, no need to check other items
-                        return;
-                    }
+            if (isProcessing) return;
+            
+            const items = e.clipboardData?.items;
+            if (!items) return;
+            
+            for (let i = 0; i < items.length; i++) {
+                if (items[i].type.indexOf('image') !== -1) {
+                    e.preventDefault();
+                    
+                    const blob = items[i].getAsFile();
+                    handleImageFile(blob);
+                    showNotification('Image pasted successfully!', 'success');
+                    break;
                 }
             }
-            
-            // If we get here, no image was found in the clipboard
-            // You could optionally show a notification
-            // showNotification('No image found in clipboard', 'warning');
-        });
-
-        // Also listen for paste events specifically on the upload area
-        uploadArea.addEventListener('paste', (e) => {
-            // The document-level listener will handle it, but we can also
-            // give visual feedback that paste is supported here
-            uploadArea.classList.add('dragover');
-            setTimeout(() => {
-                uploadArea.classList.remove('dragover');
-            }, 300);
-        });
-
-        // Camera Button
-        cameraBtn.addEventListener('click', () => {
-            showNotification('Camera feature would open here in a real app', 'warning');
-        });
-
-        // Clear Button
-        clearBtn.addEventListener('click', () => {
-            currentImage = null;
-            extractedText = '';
-            imagePreview.style.display = 'none';
-            imagePreview.src = '';
-            resultText.textContent = 'Extracted text will appear here...';
-            resultText.classList.add('empty');
-            extractBtn.disabled = true;
-            clearBtn.disabled = true;
-            copyBtn.disabled = true;
-            formatBtn.disabled = true;
-            updateCounts();
-            showNotification('Cleared all content', 'success');
-        });
-
-        // Copy Button
-        copyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText(extractedText).then(() => {
-                showNotification('Text copied to clipboard', 'success');
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-                showNotification('Failed to copy text', 'error');
-            });
-        });
-
-        // Format Button
-        formatBtn.addEventListener('click', () => {
-            if (!extractedText) return;
-            
-            showNotification('Formatting text...', 'warning');
-            
-            // Simulate formatting process with timeout
-            progressBar.style.display = 'block';
-            progress.style.width = '0%';
-            
-            let progressValue = 0;
-            const interval = setInterval(() => {
-                progressValue += 10;
-                progress.style.width = `${progressValue}%`;
-                
-                if (progressValue >= 100) {
-                    clearInterval(interval);
-                    
-                    // Apply formatting to the text
-                    const formattedText = formatText(extractedText);
-                    extractedText = formattedText;
-                    resultText.innerHTML = formattedText;
-                    updateCounts();
-                    
-                    progressBar.style.display = 'none';
-                    showNotification('Text formatted successfully', 'success');
-                }
-            }, 100);
         });
 
         // Extract Button
-        extractBtn.addEventListener('click', () => {
-            if (!currentImage) return;
-            
-            showNotification('Extracting text from image...', 'warning');
-            
-            // Show progress bar
-            progressBar.style.display = 'block';
-            progress.style.width = '0%';
-            
-            // Simulate OCR processing with timeout
-            let progressValue = 0;
-            const interval = setInterval(() => {
-                progressValue += 20;
-                progress.style.width = `${progressValue}%`;
-                
-                if (progressValue >= 100) {
-                    clearInterval(interval);
-                    
-                    // Simulate extracted text based on the example images
-                    let simulatedText = '';
-                    
-                    // Check which example image is being used
-                    if (currentImage.includes('example1')) {
-                        simulatedText = "The quick brown fox jumps 2² over the lazy dog.\nEmail: example@gmail.com\nPhone: +123-456-7890";
-                    } else if (currentImage.includes('example2')) {
-                        simulatedText = "Math: a² + b² = c²\nEquation: x = -b ± √(b² - 4ac) / 2a";
-                    } else if (currentImage.includes('example3')) {
-                        simulatedText = "Invoice #123456\nDate: March 25, 2023\nTotal: $1,234.56";
-                    } else {
-                        // Generic text extraction with superscript detection
-                        simulatedText = simulateOCRText();
-                    }
-                    
-                    extractedText = simulatedText;
-                    resultText.textContent = extractedText;
-                    resultText.classList.remove('empty');
-                    copyBtn.disabled = false;
-                    formatBtn.disabled = false;
-                    updateCounts();
-                    
-                    progressBar.style.display = 'none';
-                    showNotification('Text extracted successfully', 'success');
-                }
-            }, 300);
-        });
+        extractBtn.addEventListener('click', extractTextFromImage);
 
-        // Example Images
-        exampleImages.forEach(img => {
-            img.addEventListener('click', (e) => {
-                const exampleNum = e.target.dataset.example;
-                loadExampleImage(exampleNum);
+        // Clear Buttons
+        clearBtn.addEventListener('click', clearImage);
+        clearTextBtn.addEventListener('click', clearText);
+
+        // Copy Button
+        copyBtn.addEventListener('click', copyText);
+
+        // Example Cards
+        exampleCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const type = card.dataset.example;
+                loadExampleImage(type);
             });
         });
 
+        // PWA Installation
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPWA.classList.add('show');
+        });
+
+        installPWA.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            if (outcome === 'accepted') {
+                showNotification('App installed successfully!', 'success');
+            }
+            
+            deferredPrompt = null;
+            installPWA.classList.remove('show');
+        });
+
+        // Footer Links
+        document.getElementById('privacyLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showNotification('All processing happens locally in your browser. No data is sent to servers.', 'success');
+        });
+
+        document.getElementById('aboutLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            showNotification('OCR Pro uses Tesseract.js for text recognition. Works completely offline.', 'success');
+        });
+
+        document.getElementById('githubLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open('https://github.com/tesseract-ocr/tesseract', '_blank');
+        });
+
         // Functions
+        async function initializeApp() {
+            showNotification('Welcome to OCR Pro! Load an image to extract text.', 'success');
+            updateCounts();
+            
+            // Initialize Tesseract worker
+            try {
+                await worker.load();
+                await worker.loadLanguage(currentLanguage);
+                await worker.initialize(currentLanguage);
+                console.log('Tesseract initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize Tesseract:', error);
+                showNotification('OCR engine initialization failed. Please refresh.', 'error');
+            }
+        }
+
         function handleImageFile(file) {
             if (!file.type.startsWith('image/')) {
                 showNotification('Please select an image file', 'error');
@@ -867,80 +832,221 @@
                 imagePreview.style.display = 'block';
                 extractBtn.disabled = false;
                 clearBtn.disabled = false;
-                showNotification('Image loaded successfully', 'success');
+                
+                // Auto-extract text after loading
+                setTimeout(() => extractTextFromImage(), 500);
             };
             reader.readAsDataURL(file);
         }
 
-        function loadExampleImage(exampleNum) {
-            let imageUrl = '';
-            let altText = '';
+        async function extractTextFromImage() {
+            if (!currentImage || isProcessing) return;
             
-            switch(exampleNum) {
-                case '1':
-                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5UaGUgcXVpY2sgYnJvd24gZm94IGp1bXBzPHRzcGFuIGR5PSIxMCIgeD0iMTAiPjI8L3RzcGFuPjx0c3BhbiBkeT0iLTEwIiB4PSIxOCI+MjwvdHNwYW4+IG92ZXIgdGhlIGxhenkgZG9nLjwvdGV4dD48dGV4dCB4PSIxMCIgeT0iNjAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+RW1haWw6IGV4YW1wbGVAZ21haWwuY29tPC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI5MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5QaG9uZTogKzEyMy00NTYtNzg5MDwvdGV4dD48L3N2Zz4=';
-                    altText = 'Text with superscript example';
+            isProcessing = true;
+            extractBtn.disabled = true;
+            extractBtn.innerHTML = '<span class="spinner"></span> Processing...';
+            
+            showNotification('Extracting text from image...', 'success');
+            
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = 'Initializing OCR...';
+            
+            try {
+                // Use Tesseract.js to recognize text
+                const result = await worker.recognize(currentImage);
+                
+                extractedText = result.data.text;
+                
+                // Format text for better readability
+                extractedText = formatExtractedText(extractedText);
+                
+                // Display result
+                resultText.textContent = extractedText;
+                resultText.classList.remove('empty');
+                copyBtn.disabled = false;
+                clearTextBtn.disabled = false;
+                
+                updateCounts();
+                showNotification(`Text extracted successfully! Confidence: ${result.data.confidence.toFixed(1)}%`, 'success');
+                
+            } catch (error) {
+                console.error('OCR Error:', error);
+                showNotification('Failed to extract text. Please try another image.', 'error');
+                resultText.textContent = 'Error: Could not extract text. Please try a clearer image.';
+                resultText.classList.remove('empty');
+            } finally {
+                isProcessing = false;
+                extractBtn.disabled = false;
+                extractBtn.innerHTML = '<i class="fas fa-text-height"></i> Extract Text';
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        function handleTesseractProgress(message) {
+            if (message.status === 'recognizing text') {
+                const progress = Math.min(100, Math.round(message.progress * 100));
+                progressBar.style.width = `${progress}%`;
+                
+                if (progress < 30) {
+                    progressText.textContent = 'Detecting text...';
+                } else if (progress < 70) {
+                    progressText.textContent = 'Recognizing characters...';
+                } else {
+                    progressText.textContent = 'Finalizing...';
+                }
+            }
+        }
+
+        function formatExtractedText(text) {
+            // Clean up common OCR artifacts
+            let formatted = text
+                .replace(/\n\s*\n\s*\n/g, '\n\n') // Reduce multiple newlines
+                .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between lower and upper case
+                .replace(/\s+/g, ' ') // Normalize spaces
+                .replace(/[|]/g, 'I') // Fix common OCR errors
+                .replace(/[0O]/g, '0') // Fix zero/O confusion
+                .replace(/[1l]/g, '1'); // Fix one/l confusion
+            
+            // Format superscripts (2^2 becomes 2², etc.)
+            formatted = formatted
+                .replace(/(\d)\^(\d)/g, (match, num, power) => {
+                    const superscripts = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+                    return num + (superscripts[power] || power);
+                })
+                .replace(/(\d)2/g, (match, num) => {
+                    // Common pattern for squares
+                    return num + '²';
+                })
+                .replace(/(\d)3/g, (match, num) => {
+                    // Common pattern for cubes
+                    return num + '³';
+                });
+            
+            return formatted.trim();
+        }
+
+        function loadExampleImage(type) {
+            showNotification(`Loading ${type} example...`, 'success');
+            
+            // Create example images based on type
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800;
+            canvas.height = 600;
+            
+            // Set background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add example text based on type
+            ctx.fillStyle = '#000000';
+            ctx.font = '32px Arial';
+            ctx.textBaseline = 'top';
+            
+            switch(type) {
+                case 'math':
+                    ctx.fillText('Mathematical Formulas:', 50, 50);
+                    ctx.font = '28px Arial';
+                    ctx.fillText('1. Quadratic Formula:', 50, 120);
+                    ctx.fillText('x = (-b ± √(b² - 4ac)) / 2a', 70, 160);
+                    ctx.fillText('2. Pythagorean Theorem:', 50, 220);
+                    ctx.fillText('a² + b² = c²', 70, 260);
+                    ctx.fillText('3. E = mc² (Energy-Mass Equivalence)', 50, 320);
+                    ctx.fillText('4. Volume of sphere: V = 4/3πr³', 50, 380);
                     break;
-                case '2':
-                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5NYXRoOiBhPHRzcGFuIGR5PSIxMCIgeD0iMjAiPjI8L3RzcGFuPiArIGI8dHNwYW4gZHk9IjEwIiB4PSIzNCI+MjwvdHNwYW4+ID0gYzx0c3BhbiBkeT0iMTAiIHg9IjUwIj4yPC90c3Bhbj48L3RleHQ+PHRleHQgeD0iMTAiIHk9IjcwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiPkVxdWF0aW9uOiB4ID0gLWIgwrAgPHQ+PHQ+88OHPC90Pjx0IGR5PSIxMCIgZng9IjEwMCI+MjwvdD48L3Q+IC0gNGFjPC90PjwvZGl2PjwvdGV4dD48L3N2Zz4=';
-                    altText = 'Mathematical equation';
+                    
+                case 'document':
+                    ctx.fillText('INVOICE #2023-0456', 50, 50);
+                    ctx.font = '24px Arial';
+                    ctx.fillText('Date: November 15, 2023', 50, 100);
+                    ctx.fillText('Client: Tech Solutions Inc.', 50, 140);
+                    ctx.fillText('Description: Software Development', 50, 180);
+                    ctx.fillText('Amount: $2,450.00', 50, 220);
+                    ctx.fillText('Due Date: December 15, 2023', 50, 260);
                     break;
-                case '3':
-                    imageUrl = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjEwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpZXplPSIxNCI+SW52b2ljZSAjMTIzNDU2PC90ZXh0Pjx0ZXh0IHg9IjEwIiB5PSI2MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0Ij5EYXRlOiBNYXJjaCAyNSwgMjAyMzwvdGV4dD48dGV4dCB4PSIxMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+VG90YWw6ICQxLDIzNC41NjwvdGV4dD48L3N2Zz4=';
-                    altText = 'Invoice example';
+                    
+                case 'handwritten':
+                    // Simulate handwritten text
+                    ctx.font = 'italic 36px "Comic Sans MS"';
+                    ctx.fillText('Meeting Notes:', 50, 50);
+                    ctx.font = 'italic 32px "Comic Sans MS"';
+                    ctx.fillText('1. Finish quarterly report', 70, 120);
+                    ctx.fillText('2. Schedule team meeting', 70, 170);
+                    ctx.fillText('3. Update project timeline', 70, 220);
+                    ctx.fillText('4. Review budget for Q4', 70, 270);
+                    break;
+                    
+                case 'screenshot':
+                    ctx.fillStyle = '#1e40af';
+                    ctx.fillRect(0, 0, canvas.width, 80);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 36px Arial';
+                    ctx.fillText('Website Screenshot', 50, 20);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '24px Arial';
+                    ctx.fillText('Welcome to our website!', 50, 150);
+                    ctx.fillText('Contact: info@example.com', 50, 200);
+                    ctx.fillText('Phone: (123) 456-7890', 50, 250);
                     break;
             }
             
-            currentImage = imageUrl;
-            imagePreview.src = imageUrl;
-            imagePreview.alt = altText;
+            // Convert canvas to data URL
+            currentImage = canvas.toDataURL('image/png');
+            imagePreview.src = currentImage;
             imagePreview.style.display = 'block';
             extractBtn.disabled = false;
             clearBtn.disabled = false;
-            showNotification('Example image loaded', 'success');
+            
+            // Auto-extract
+            setTimeout(() => extractTextFromImage(), 500);
         }
 
-        function simulateOCRText() {
-            // Simulate OCR text extraction with superscripts
-            const texts = [
-                "Document Title\n\nThis is a sample document with 2² and 3³ examples.\nThe value of x² + y² = z² is important.\nE = mc² is a famous equation.\n\nContact info: john.doe@example.com\nPhone: (555) 123-4567",
-                "Meeting Notes\n\nAction items:\n1. Update the report with Q³ data\n2. Prepare presentation for the board\n3. Review budget for 2024²\n\nImportant: The deadline is 2ⁿᵈ week of March.",
-                "Scientific Paper Abstract\n\nThe study examined the relationship between\nvelocity (v) and energy (E) where E ∝ v².\nResults showed significant correlation (p < 0.01²).\nFurther research needed for T° > 100°C."
-            ];
-            
-            return texts[Math.floor(Math.random() * texts.length)];
+        function clearImage() {
+            currentImage = null;
+            imagePreview.src = '';
+            imagePreview.style.display = 'none';
+            extractBtn.disabled = true;
+            clearBtn.disabled = true;
+            progressContainer.style.display = 'none';
+            showNotification('Image cleared', 'success');
         }
 
-        function formatText(text) {
-            // Convert plain text to formatted HTML with superscripts
-            let formatted = text
-                .replace(/\n/g, '<br>')
-                .replace(/(\d)\^(\d)/g, '$1<sup class="superscript">$2</sup>')
-                .replace(/(\d)²/g, '$1<sup class="superscript">2</sup>')
-                .replace(/(\d)³/g, '$1<sup class="superscript">3</sup>')
-                .replace(/(\w)\^(\d)/g, '$1<sup class="superscript">$2</sup>');
-            
-            // Add additional formatting for common patterns
-            formatted = formatted.replace(/(E = mc)/g, 'E = mc<sup class="superscript">2</sup>');
-            formatted = formatted.replace(/(x\^2 \+ y\^2 = z\^2)/g, 'x<sup class="superscript">2</sup> + y<sup class="superscript">2</sup> = z<sup class="superscript">2</sup>');
-            
-            return formatted;
+        function clearText() {
+            extractedText = '';
+            resultText.textContent = 'Extracted text will appear here...';
+            resultText.classList.add('empty');
+            copyBtn.disabled = true;
+            clearTextBtn.disabled = true;
+            updateCounts();
+            showNotification('Text cleared', 'success');
+        }
+
+        async function copyText() {
+            try {
+                await navigator.clipboard.writeText(extractedText);
+                showNotification('Text copied to clipboard!', 'success');
+            } catch (err) {
+                console.error('Failed to copy:', err);
+                showNotification('Failed to copy text', 'error');
+            }
         }
 
         function updateCounts() {
-            const text = extractedText;
+            const text = extractedText || '';
             const chars = text.length;
             const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
             
-            charCount.textContent = `${chars} characters`;
+            charCount.textContent = `${chars} chars`;
             wordCount.textContent = `${words} words`;
+            languageSpan.textContent = languages[currentLanguage] || 'English';
         }
 
         function showNotification(message, type = 'info') {
             notification.textContent = message;
             notification.className = `notification ${type} show`;
             
-            // Add icon based on type
             let icon = 'info-circle';
             if (type === 'success') icon = 'check-circle';
             if (type === 'error') icon = 'exclamation-circle';
@@ -953,13 +1059,16 @@
             }, 4000);
         }
 
-        // Initialize
-        updateCounts();
-        
-        // Show welcome notification
-        setTimeout(() => {
-            showNotification('Welcome to ImageToText Pro! Try uploading an image or paste one from clipboard.', 'success');
-        }, 1000);
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(() => {
+                    console.log('Service Worker registered');
+                }).catch(err => {
+                    console.log('Service Worker registration failed:', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>

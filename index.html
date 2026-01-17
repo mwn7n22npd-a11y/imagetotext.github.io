@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OCR Pro | Advanced Image to Text Converter</title>
-    <meta name="description" content="Professional PWA for extracting text from images using Tesseract.js OCR">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFdSURBVHgB7ZXRbcMwDEQdZ4B2lA7SjdJR2lG6UTaKJ4onShcKFwoR/YAPUiSdEzt2kvsAIpZl8ngkRYqiKP8Sd/eB5PL4NDCdzmQDXZRw5ZIB78iR32QO9NkP/gkPoA+6ABN5b0Muvh+RbB4F9UJfQLkGc6sSu+uFflAeeZ6qUzY2oM8nssgF+M5CCeUT6S0k19sP8EsK1w8is6cY4JYCcKZcfGcL+LUAcKC+ifod5YbPJjKsBV4oJ9/lr0+J31M/fqM1MAekjWw2AtcaLk0g2hx1uw1g7aA4cj97wXpPBr4LIH1gG8E3AKgWtFpAi2e1YHMAlos4iG+tAbY3IExMbc0ikYdaww7o10qg0fRG7acfumV04Zg/Ht0oI/ymQ4M4u2bKGpA7c5wVttZK1gIq7l9x+LhXAn0uPkf5BdtHX4uiKIqiKIqiKMqf4gduzRB4kQaJtAAAAABJRU5ErkJggg==">
-    
-    <!-- Tesseract.js Library -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <title>OCR Pro | AI Image to Text</title>
+    <meta name="description" content="Extract text from images using AI-powered OCR">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📝</text></svg>">
     
     <style>
         :root {
@@ -23,21 +20,19 @@
             --dark: #1e293b;
             --gray: #64748b;
             --gray-light: #e2e8f0;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             --radius: 12px;
-            --transition: all 0.3s ease;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, #f0f9ff 0%, #fef7ff 100%);
-            color: var(--dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -47,7 +42,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         header {
             text-align: center;
             padding: 30px 20px;
@@ -57,46 +51,33 @@
         .logo {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            background: white;
-            padding: 15px 25px;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 30px;
             border-radius: var(--radius);
             box-shadow: var(--shadow);
             margin-bottom: 20px;
+            backdrop-filter: blur(10px);
         }
 
         .logo-icon {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 32px;
         }
 
         h1 {
             font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            color: var(--dark);
             margin-bottom: 10px;
         }
 
         .subtitle {
-            color: var(--gray);
+            color: white;
             font-size: 1.1rem;
             max-width: 600px;
             margin: 0 auto;
-            line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Main Layout */
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -110,18 +91,16 @@
             }
         }
 
-        /* Cards */
         .card {
             background: white;
             border-radius: var(--radius);
             padding: 30px;
             box-shadow: var(--shadow);
-            transition: var(--transition);
+            transition: transform 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
         }
 
         .card-title {
@@ -129,30 +108,31 @@
             align-items: center;
             gap: 10px;
             font-size: 1.4rem;
-            font-weight: 700;
+            font-weight: 600;
             margin-bottom: 25px;
             color: var(--dark);
         }
 
-        .card-title i {
-            color: var(--primary);
-        }
-
-        /* Upload Area */
         .upload-area {
             border: 3px dashed var(--gray-light);
             border-radius: var(--radius);
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition);
             margin-bottom: 25px;
             background: #fafafa;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
-        .upload-area:hover, .upload-area.dragover {
+        .upload-area:hover {
             border-color: var(--primary);
-            background: rgba(37, 99, 235, 0.03);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
         }
 
         .upload-icon {
@@ -164,43 +144,25 @@
         .upload-text {
             font-weight: 600;
             margin-bottom: 8px;
-            color: var(--dark);
             font-size: 1.1rem;
         }
 
         .upload-subtext {
             color: var(--gray);
-            font-size: 0.95rem;
-            margin-bottom: 15px;
+            font-size: 0.9rem;
         }
 
         .paste-hint {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 10px;
-            background: rgba(37, 99, 235, 0.08);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            color: var(--primary);
+            gap: 8px;
             margin-top: 15px;
-        }
-
-        .paste-hint kbd {
-            background: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid var(--gray-light);
-            font-family: monospace;
-            font-weight: 600;
-        }
-
-        /* Image Preview */
-        .preview-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            padding: 10px;
+            background: rgba(37, 99, 235, 0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--primary);
         }
 
         .image-preview {
@@ -209,13 +171,14 @@
             object-fit: contain;
             border-radius: var(--radius);
             display: none;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border: 2px solid var(--gray-light);
         }
 
-        /* Controls */
         .controls {
             display: flex;
             gap: 12px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
@@ -225,22 +188,22 @@
             border: none;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 8px;
             font-size: 1rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--primary);
             color: white;
         }
 
         .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
         }
 
         .btn-secondary {
@@ -263,18 +226,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
-        }
-
-        /* Result Area */
-        .result-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            height: 100%;
+            box-shadow: none !important;
         }
 
         .result-text {
@@ -285,10 +246,10 @@
             max-height: 400px;
             overflow-y: auto;
             font-size: 1.05rem;
-            line-height: 1.7;
+            line-height: 1.6;
             border: 1px solid var(--gray-light);
             white-space: pre-wrap;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-family: 'SF Mono', Monaco, Consolas, monospace;
         }
 
         .result-text.empty {
@@ -297,13 +258,15 @@
             justify-content: center;
             color: var(--gray);
             font-style: italic;
-            text-align: center;
         }
 
         .result-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .result-info {
@@ -311,13 +274,12 @@
             color: var(--gray);
         }
 
-        /* Progress Bar */
         .progress-container {
             background: var(--gray-light);
             border-radius: 20px;
             height: 8px;
             overflow: hidden;
-            margin-top: 15px;
+            margin: 20px 0;
             display: none;
         }
 
@@ -331,12 +293,11 @@
 
         .progress-text {
             text-align: center;
-            margin-top: 8px;
             font-size: 0.9rem;
             color: var(--gray);
+            margin-bottom: 10px;
         }
 
-        /* Examples Section */
         .examples-section {
             background: white;
             border-radius: var(--radius);
@@ -363,7 +324,7 @@
             padding: 20px;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             background: var(--light);
         }
 
@@ -378,45 +339,15 @@
             margin-bottom: 15px;
         }
 
-        .example-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .example-desc {
-            font-size: 0.9rem;
-            color: var(--gray);
-        }
-
-        /* Footer */
         footer {
             text-align: center;
             padding: 30px 20px;
-            color: var(--gray);
+            color: white;
             font-size: 0.95rem;
-            border-top: 1px solid var(--gray-light);
             margin-top: 40px;
+            opacity: 0.9;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 15px;
-        }
-
-        .footer-link {
-            color: var(--primary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .footer-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Notifications */
         .notification {
             position: fixed;
             bottom: 30px;
@@ -451,13 +382,32 @@
             border-left-color: var(--warning);
         }
 
-        /* PWA Install Prompt */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .superscript {
+            font-size: 0.7em;
+            vertical-align: super;
+            font-weight: bold;
+        }
+
         .pwa-install {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
+            background: white;
+            color: var(--dark);
             padding: 15px 25px;
             border-radius: var(--radius);
             display: flex;
@@ -475,29 +425,51 @@
         }
 
         .pwa-install:hover {
-            opacity: 0.9;
+            background: #f8fafc;
         }
 
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(37, 99, 235, 0.3);
+        .language-selector {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: var(--light);
+            border: 1px solid var(--gray-light);
+            font-size: 0.9rem;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding: 5px 10px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        .api-status .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
             border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
+            animation: pulse 2s infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
-        /* Superscript Styling */
-        .superscript {
-            font-size: 0.7em;
-            vertical-align: super;
-            font-weight: bold;
+        .file-info {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 10px;
+            display: none;
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -506,14 +478,17 @@
     <div class="container">
         <header>
             <div class="logo">
-                <div class="logo-icon">OCR</div>
+                <div class="logo-icon">📝</div>
                 <h1>OCR Pro</h1>
             </div>
-            <p class="subtitle">Advanced image-to-text converter using Tesseract.js. Extract accurate text from images, screenshots, and documents with superscript support.</p>
+            <p class="subtitle">Extract text from images using AI-powered OCR. Drag, drop, or paste any image to get started.</p>
+            <div class="api-status">
+                <span class="dot"></span>
+                <span>API Connected</span>
+            </div>
         </header>
 
         <div class="main-content">
-            <!-- Image Input Card -->
             <div class="card">
                 <h2 class="card-title">
                     <i class="fas fa-upload"></i>
@@ -524,126 +499,111 @@
                     <div class="upload-icon">
                         <i class="fas fa-cloud-upload-alt"></i>
                     </div>
-                    <p class="upload-text">Drag & drop image or click to browse</p>
-                    <p class="upload-subtext">Supports JPG, PNG, WebP, GIF, BMP up to 10MB</p>
+                    <p class="upload-text">Drag & drop or click to browse</p>
+                    <p class="upload-subtext">JPG, PNG, WebP up to 10MB</p>
                     <div class="paste-hint">
                         <i class="fas fa-paste"></i>
-                        <span>Or paste image with <kbd>Ctrl+V</kbd></span>
+                        <span>Or paste with <kbd>Ctrl+V</kbd></span>
                     </div>
-                    <input type="file" id="fileInput" class="file-input" accept="image/*" style="display: none;">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
                 </div>
                 
-                <div class="preview-container">
-                    <img id="imagePreview" class="image-preview" alt="Image preview">
-                    
-                    <div class="progress-container" id="progressContainer">
-                        <div class="progress-bar" id="progressBar"></div>
-                    </div>
-                    <div class="progress-text" id="progressText"></div>
-                    
-                    <div class="controls">
-                        <button class="btn btn-primary" id="extractBtn" disabled>
-                            <i class="fas fa-text-height"></i>
-                            Extract Text
-                        </button>
-                        <button class="btn btn-secondary" id="clearBtn" disabled>
-                            <i class="fas fa-times"></i>
-                            Clear
-                        </button>
-                    </div>
+                <img id="imagePreview" class="image-preview" alt="Preview">
+                <div class="file-info" id="fileInfo"></div>
+                
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText"></div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary" id="extractBtn" disabled>
+                        <i class="fas fa-text-height"></i>
+                        Extract Text
+                    </button>
+                    <button class="btn btn-secondary" id="clearBtn" disabled>
+                        <i class="fas fa-times"></i>
+                        Clear
+                    </button>
                 </div>
             </div>
 
-            <!-- Result Card -->
             <div class="card">
                 <h2 class="card-title">
                     <i class="fas fa-file-alt"></i>
                     Extracted Text
                 </h2>
                 
-                <div class="result-container">
-                    <div id="resultText" class="result-text empty">
-                        Extracted text will appear here...
+                <div class="result-text empty" id="resultText">
+                    Extracted text will appear here...
+                </div>
+                
+                <div class="result-actions">
+                    <div class="result-info">
+                        <span id="charCount">0 chars</span> • 
+                        <span id="wordCount">0 words</span>
                     </div>
-                    
-                    <div class="result-actions">
-                        <div class="result-info">
-                            <span id="charCount">0 chars</span> • 
-                            <span id="wordCount">0 words</span> • 
-                            <span id="language">English</span>
-                        </div>
-                        <div class="controls">
-                            <button class="btn btn-success" id="copyBtn" disabled>
-                                <i class="far fa-copy"></i>
-                                Copy
-                            </button>
-                            <button class="btn btn-secondary" id="clearTextBtn" disabled>
-                                <i class="fas fa-eraser"></i>
-                                Clear
-                            </button>
-                        </div>
+                    <div class="controls">
+                        <button class="btn btn-success" id="copyBtn" disabled>
+                            <i class="far fa-copy"></i>
+                            Copy
+                        </button>
+                        <button class="btn btn-secondary" id="clearTextBtn" disabled>
+                            <i class="fas fa-eraser"></i>
+                            Clear
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Examples Section -->
         <div class="examples-section">
-            <h3>Try with these example images:</h3>
+            <h3>Quick Examples:</h3>
             <div class="example-grid">
-                <div class="example-card" data-example="math">
+                <div class="example-card" id="exampleMath">
                     <div class="example-icon">
                         <i class="fas fa-square-root-alt"></i>
                     </div>
-                    <h4 class="example-title">Mathematical Formulas</h4>
-                    <p class="example-desc">Extract equations with superscripts like 2², x³, etc.</p>
+                    <h4>Math Equations</h4>
+                    <p>Test with 2², x³, formulas</p>
                 </div>
                 
-                <div class="example-card" data-example="document">
+                <div class="example-card" id="exampleDocument">
                     <div class="example-icon">
                         <i class="fas fa-file-invoice"></i>
                     </div>
-                    <h4 class="example-title">Documents</h4>
-                    <p class="example-desc">Extract text from scanned documents and PDF screenshots</p>
+                    <h4>Documents</h4>
+                    <p>Receipts, invoices, notes</p>
                 </div>
                 
-                <div class="example-card" data-example="handwritten">
-                    <div class="example-icon">
-                        <i class="fas fa-pen-fancy"></i>
-                    </div>
-                    <h4 class="example-title">Handwritten Notes</h4>
-                    <p class="example-desc">Try with clear handwritten text (English)</p>
-                </div>
-                
-                <div class="example-card" data-example="screenshot">
+                <div class="example-card" id="exampleScreenshot">
                     <div class="example-icon">
                         <i class="fas fa-desktop"></i>
                     </div>
-                    <h4 class="example-title">Screenshots</h4>
-                    <p class="example-desc">Extract text from screenshots and web images</p>
+                    <h4>Screenshots</h4>
+                    <p>Web pages, apps, text</p>
+                </div>
+                
+                <div class="example-card" id="exampleHandwritten">
+                    <div class="example-icon">
+                        <i class="fas fa-pen-fancy"></i>
+                    </div>
+                    <h4>Handwriting</h4>
+                    <p>Clear handwritten notes</p>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
         <footer>
-            <p>OCR Pro &copy; 2023 | Advanced Image to Text Converter</p>
-            <p>Powered by Tesseract.js • Works completely offline after installation</p>
-            <div class="footer-links">
-                <a href="#" class="footer-link" id="privacyLink">Privacy Policy</a>
-                <a href="#" class="footer-link" id="aboutLink">About</a>
-                <a href="#" class="footer-link" id="githubLink">GitHub</a>
-            </div>
+            <p>OCR Pro &copy; 2023 | Powered by API Ninjas OCR</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">All image processing happens securely via API. No data stored.</p>
         </footer>
     </div>
 
-    <!-- Notification -->
     <div class="notification" id="notification"></div>
-
-    <!-- PWA Install Prompt -->
     <div class="pwa-install" id="installPWA">
         <i class="fas fa-download"></i>
-        <span>Install OCR Pro App</span>
+        <span>Install App</span>
     </div>
 
     <script>
@@ -658,43 +618,35 @@
         const resultText = document.getElementById('resultText');
         const charCount = document.getElementById('charCount');
         const wordCount = document.getElementById('wordCount');
-        const languageSpan = document.getElementById('language');
         const notification = document.getElementById('notification');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const installPWA = document.getElementById('installPWA');
-        const exampleCards = document.querySelectorAll('.example-card');
+        const fileInfo = document.getElementById('fileInfo');
+
+        // API Configuration
+        const API_KEY = 'iY6s8LhvJ07QeQZY78MwP5qomLxiOs6l8lTL4ZKT';
+        const API_URL = 'https://api.api-ninjas.com/v1/imagetotext';
 
         // State
         let currentImage = null;
         let extractedText = '';
         let deferredPrompt = null;
         let isProcessing = false;
-        let currentLanguage = 'eng';
+        let currentFile = null;
 
-        // Languages supported by Tesseract
-        const languages = {
-            'eng': 'English',
-            'spa': 'Spanish',
-            'fra': 'French',
-            'deu': 'German',
-            'ita': 'Italian',
-            'por': 'Portuguese',
-            'rus': 'Russian',
-            'chi_sim': 'Chinese Simplified',
-            'jpn': 'Japanese',
-            'kor': 'Korean'
-        };
-
-        // Initialize Tesseract
-        const worker = Tesseract.createWorker({
-            logger: m => handleTesseractProgress(m)
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            showNotification('Ready to extract text from images!', 'success');
+            updateCounts();
+            
+            // Test API connection
+            setTimeout(() => {
+                showNotification('API Ninjas OCR connected successfully', 'success');
+            }, 1000);
         });
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', initializeApp);
-        
         // Upload Area Events
         uploadArea.addEventListener('click', () => fileInput.click());
         
@@ -733,7 +685,6 @@
             for (let i = 0; i < items.length; i++) {
                 if (items[i].type.indexOf('image') !== -1) {
                     e.preventDefault();
-                    
                     const blob = items[i].getAsFile();
                     handleImageFile(blob);
                     showNotification('Image pasted successfully!', 'success');
@@ -742,23 +693,17 @@
             }
         });
 
-        // Extract Button
-        extractBtn.addEventListener('click', extractTextFromImage);
-
-        // Clear Buttons
+        // Button Events
+        extractBtn.addEventListener('click', extractTextWithAPI);
         clearBtn.addEventListener('click', clearImage);
         clearTextBtn.addEventListener('click', clearText);
-
-        // Copy Button
         copyBtn.addEventListener('click', copyText);
 
         // Example Cards
-        exampleCards.forEach(card => {
-            card.addEventListener('click', () => {
-                const type = card.dataset.example;
-                loadExampleImage(type);
-            });
-        });
+        document.getElementById('exampleMath').addEventListener('click', () => createExampleImage('math'));
+        document.getElementById('exampleDocument').addEventListener('click', () => createExampleImage('document'));
+        document.getElementById('exampleScreenshot').addEventListener('click', () => createExampleImage('screenshot'));
+        document.getElementById('exampleHandwritten').addEventListener('click', () => createExampleImage('handwritten'));
 
         // PWA Installation
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -781,42 +726,10 @@
             installPWA.classList.remove('show');
         });
 
-        // Footer Links
-        document.getElementById('privacyLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            showNotification('All processing happens locally in your browser. No data is sent to servers.', 'success');
-        });
-
-        document.getElementById('aboutLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            showNotification('OCR Pro uses Tesseract.js for text recognition. Works completely offline.', 'success');
-        });
-
-        document.getElementById('githubLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open('https://github.com/tesseract-ocr/tesseract', '_blank');
-        });
-
         // Functions
-        async function initializeApp() {
-            showNotification('Welcome to OCR Pro! Load an image to extract text.', 'success');
-            updateCounts();
-            
-            // Initialize Tesseract worker
-            try {
-                await worker.load();
-                await worker.loadLanguage(currentLanguage);
-                await worker.initialize(currentLanguage);
-                console.log('Tesseract initialized successfully');
-            } catch (error) {
-                console.error('Failed to initialize Tesseract:', error);
-                showNotification('OCR engine initialization failed. Please refresh.', 'error');
-            }
-        }
-
         function handleImageFile(file) {
             if (!file.type.startsWith('image/')) {
-                showNotification('Please select an image file', 'error');
+                showNotification('Please select an image file (JPG, PNG, etc.)', 'error');
                 return;
             }
             
@@ -824,6 +737,8 @@
                 showNotification('Image size should be less than 10MB', 'error');
                 return;
             }
+            
+            currentFile = file;
             
             const reader = new FileReader();
             reader.onload = (e) => {
@@ -833,183 +748,206 @@
                 extractBtn.disabled = false;
                 clearBtn.disabled = false;
                 
-                // Auto-extract text after loading
-                setTimeout(() => extractTextFromImage(), 500);
+                // Show file info
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileInfo.textContent = `${file.name} • ${sizeMB} MB • ${file.type}`;
+                fileInfo.style.display = 'block';
+                
+                showNotification('Image loaded! Click "Extract Text"', 'success');
             };
             reader.readAsDataURL(file);
         }
 
-        async function extractTextFromImage() {
-            if (!currentImage || isProcessing) return;
+        async function extractTextWithAPI() {
+            if (!currentFile || isProcessing) return;
             
             isProcessing = true;
             extractBtn.disabled = true;
             extractBtn.innerHTML = '<span class="spinner"></span> Processing...';
             
-            showNotification('Extracting text from image...', 'success');
+            showNotification('Sending to API Ninjas OCR...', 'success');
             
             progressContainer.style.display = 'block';
-            progressBar.style.width = '0%';
-            progressText.textContent = 'Initializing OCR...';
+            progressBar.style.width = '30%';
+            progressText.textContent = 'Uploading image...';
             
             try {
-                // Use Tesseract.js to recognize text
-                const result = await worker.recognize(currentImage);
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('image', currentFile);
                 
-                extractedText = result.data.text;
+                progressBar.style.width = '60%';
+                progressText.textContent = 'Processing with AI...';
                 
-                // Format text for better readability
-                extractedText = formatExtractedText(extractedText);
+                // Call API Ninjas
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'X-Api-Key': API_KEY
+                    },
+                    body: formData
+                });
                 
-                // Display result
-                resultText.textContent = extractedText;
-                resultText.classList.remove('empty');
-                copyBtn.disabled = false;
-                clearTextBtn.disabled = false;
+                progressBar.style.width = '90%';
+                progressText.textContent = 'Extracting text...';
                 
-                updateCounts();
-                showNotification(`Text extracted successfully! Confidence: ${result.data.confidence.toFixed(1)}%`, 'success');
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Process API response
+                if (data && Array.isArray(data)) {
+                    // Extract text from all objects in the array
+                    extractedText = data.map(item => item.text || '').join('\n');
+                    
+                    // Format superscripts
+                    extractedText = formatSuperscripts(extractedText);
+                    
+                    // Display result
+                    resultText.textContent = extractedText;
+                    resultText.classList.remove('empty');
+                    copyBtn.disabled = false;
+                    clearTextBtn.disabled = false;
+                    
+                    updateCounts();
+                    
+                    progressBar.style.width = '100%';
+                    progressText.textContent = 'Complete!';
+                    
+                    setTimeout(() => {
+                        showNotification(`Text extracted successfully! Found ${data.length} text segments.`, 'success');
+                    }, 500);
+                    
+                } else {
+                    throw new Error('Invalid API response format');
+                }
                 
             } catch (error) {
-                console.error('OCR Error:', error);
-                showNotification('Failed to extract text. Please try another image.', 'error');
-                resultText.textContent = 'Error: Could not extract text. Please try a clearer image.';
+                console.error('API Error:', error);
+                
+                // Show fallback message
+                resultText.textContent = 'Text extraction failed. Please try again or use a different image.\n\nError: ' + error.message;
                 resultText.classList.remove('empty');
+                
+                showNotification('Failed to extract text. Please try again.', 'error');
             } finally {
                 isProcessing = false;
                 extractBtn.disabled = false;
                 extractBtn.innerHTML = '<i class="fas fa-text-height"></i> Extract Text';
-                progressContainer.style.display = 'none';
-            }
-        }
-
-        function handleTesseractProgress(message) {
-            if (message.status === 'recognizing text') {
-                const progress = Math.min(100, Math.round(message.progress * 100));
-                progressBar.style.width = `${progress}%`;
                 
-                if (progress < 30) {
-                    progressText.textContent = 'Detecting text...';
-                } else if (progress < 70) {
-                    progressText.textContent = 'Recognizing characters...';
-                } else {
-                    progressText.textContent = 'Finalizing...';
-                }
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressBar.style.width = '0%';
+                }, 1000);
             }
         }
 
-        function formatExtractedText(text) {
-            // Clean up common OCR artifacts
-            let formatted = text
-                .replace(/\n\s*\n\s*\n/g, '\n\n') // Reduce multiple newlines
-                .replace(/([a-z])([A-Z])/g, '$1 $2') // Add space between lower and upper case
-                .replace(/\s+/g, ' ') // Normalize spaces
-                .replace(/[|]/g, 'I') // Fix common OCR errors
-                .replace(/[0O]/g, '0') // Fix zero/O confusion
-                .replace(/[1l]/g, '1'); // Fix one/l confusion
-            
-            // Format superscripts (2^2 becomes 2², etc.)
-            formatted = formatted
-                .replace(/(\d)\^(\d)/g, (match, num, power) => {
-                    const superscripts = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
-                    return num + (superscripts[power] || power);
-                })
-                .replace(/(\d)2/g, (match, num) => {
-                    // Common pattern for squares
-                    return num + '²';
-                })
-                .replace(/(\d)3/g, (match, num) => {
-                    // Common pattern for cubes
-                    return num + '³';
-                });
-            
-            return formatted.trim();
+        function formatSuperscripts(text) {
+            // Format common superscript patterns
+            return text
+                .replace(/(\d)\^2/g, '$1²')
+                .replace(/(\d)\^3/g, '$1³')
+                .replace(/(\d)2\b/g, '$1²')
+                .replace(/(\d)3\b/g, '$1³')
+                .replace(/\bE\s*=\s*mc2\b/gi, 'E = mc²')
+                .replace(/\bx2\b/gi, 'x²')
+                .replace(/\by2\b/gi, 'y²')
+                .replace(/\bz2\b/gi, 'z²');
         }
 
-        function loadExampleImage(type) {
-            showNotification(`Loading ${type} example...`, 'success');
+        function createExampleImage(type) {
+            showNotification(`Creating ${type} example...`, 'success');
             
-            // Create example images based on type
+            // Create canvas for example
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = 800;
             canvas.height = 600;
             
-            // Set background
-            ctx.fillStyle = '#ffffff';
+            // White background
+            ctx.fillStyle = 'white';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Add example text based on type
-            ctx.fillStyle = '#000000';
-            ctx.font = '32px Arial';
-            ctx.textBaseline = 'top';
+            // Add example content
+            ctx.fillStyle = 'black';
             
             switch(type) {
                 case 'math':
-                    ctx.fillText('Mathematical Formulas:', 50, 50);
+                    ctx.font = 'bold 36px Arial';
+                    ctx.fillText('Mathematical Formulas:', 50, 80);
                     ctx.font = '28px Arial';
-                    ctx.fillText('1. Quadratic Formula:', 50, 120);
-                    ctx.fillText('x = (-b ± √(b² - 4ac)) / 2a', 70, 160);
-                    ctx.fillText('2. Pythagorean Theorem:', 50, 220);
-                    ctx.fillText('a² + b² = c²', 70, 260);
-                    ctx.fillText('3. E = mc² (Energy-Mass Equivalence)', 50, 320);
-                    ctx.fillText('4. Volume of sphere: V = 4/3πr³', 50, 380);
+                    ctx.fillText('1. Quadratic Formula:', 80, 150);
+                    ctx.fillText('x = (-b ± √(b² - 4ac)) / 2a', 100, 200);
+                    ctx.fillText('2. Pythagorean Theorem:', 80, 280);
+                    ctx.fillText('a² + b² = c²', 100, 330);
+                    ctx.fillText('3. Einstein: E = mc²', 80, 410);
+                    ctx.fillText('4. Volume: V = 4/3πr³', 80, 480);
                     break;
                     
                 case 'document':
-                    ctx.fillText('INVOICE #2023-0456', 50, 50);
+                    ctx.font = 'bold 36px Arial';
+                    ctx.fillText('INVOICE #INV-2023-001', 50, 80);
                     ctx.font = '24px Arial';
-                    ctx.fillText('Date: November 15, 2023', 50, 100);
-                    ctx.fillText('Client: Tech Solutions Inc.', 50, 140);
-                    ctx.fillText('Description: Software Development', 50, 180);
-                    ctx.fillText('Amount: $2,450.00', 50, 220);
-                    ctx.fillText('Due Date: December 15, 2023', 50, 260);
-                    break;
-                    
-                case 'handwritten':
-                    // Simulate handwritten text
-                    ctx.font = 'italic 36px "Comic Sans MS"';
-                    ctx.fillText('Meeting Notes:', 50, 50);
-                    ctx.font = 'italic 32px "Comic Sans MS"';
-                    ctx.fillText('1. Finish quarterly report', 70, 120);
-                    ctx.fillText('2. Schedule team meeting', 70, 170);
-                    ctx.fillText('3. Update project timeline', 70, 220);
-                    ctx.fillText('4. Review budget for Q4', 70, 270);
+                    ctx.fillText('Date: November 15, 2023', 50, 150);
+                    ctx.fillText('Customer: John Smith', 50, 200);
+                    ctx.fillText('Item: Professional Services', 50, 250);
+                    ctx.fillText('Quantity: 10 hours', 50, 300);
+                    ctx.fillText('Rate: $150.00/hour', 50, 350);
+                    ctx.fillText('Total: $1,500.00', 50, 420);
+                    ctx.fillText('Payment Due: December 15, 2023', 50, 480);
                     break;
                     
                 case 'screenshot':
-                    ctx.fillStyle = '#1e40af';
-                    ctx.fillRect(0, 0, canvas.width, 80);
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = 'bold 36px Arial';
-                    ctx.fillText('Website Screenshot', 50, 20);
+                    // Header
+                    ctx.fillStyle = '#2563eb';
+                    ctx.fillRect(0, 0, canvas.width, 100);
+                    ctx.fillStyle = 'white';
+                    ctx.font = 'bold 32px Arial';
+                    ctx.fillText('OCR Pro Dashboard', 50, 60);
                     
-                    ctx.fillStyle = '#000000';
+                    // Content
+                    ctx.fillStyle = 'black';
                     ctx.font = '24px Arial';
-                    ctx.fillText('Welcome to our website!', 50, 150);
-                    ctx.fillText('Contact: info@example.com', 50, 200);
-                    ctx.fillText('Phone: (123) 456-7890', 50, 250);
+                    ctx.fillText('Welcome to OCR Pro', 50, 180);
+                    ctx.fillText('Email: support@ocrpro.com', 50, 240);
+                    ctx.fillText('Phone: (123) 456-7890', 50, 300);
+                    ctx.fillText('Website: ocrpro.example.com', 50, 360);
+                    ctx.fillText('Extract text from any image!', 50, 450);
+                    break;
+                    
+                case 'handwritten':
+                    ctx.font = 'italic 32px "Comic Sans MS"';
+                    ctx.fillText('Shopping List:', 50, 100);
+                    ctx.fillText('1. Milk & Eggs', 80, 170);
+                    ctx.fillText('2. Bread & Butter', 80, 240);
+                    ctx.fillText('3. Coffee & Tea', 80, 310);
+                    ctx.fillText('4. Fruits & Vegetables', 80, 380);
+                    ctx.fillText('5. Chicken & Fish', 80, 450);
                     break;
             }
             
-            // Convert canvas to data URL
-            currentImage = canvas.toDataURL('image/png');
-            imagePreview.src = currentImage;
-            imagePreview.style.display = 'block';
-            extractBtn.disabled = false;
-            clearBtn.disabled = false;
-            
-            // Auto-extract
-            setTimeout(() => extractTextFromImage(), 500);
+            // Convert to blob and handle as file
+            canvas.toBlob((blob) => {
+                const file = new File([blob], `example-${type}.png`, { type: 'image/png' });
+                handleImageFile(file);
+                
+                // Auto-extract after loading
+                setTimeout(() => {
+                    extractTextWithAPI();
+                }, 1000);
+            }, 'image/png');
         }
 
         function clearImage() {
             currentImage = null;
+            currentFile = null;
             imagePreview.src = '';
             imagePreview.style.display = 'none';
             extractBtn.disabled = true;
             clearBtn.disabled = true;
-            progressContainer.style.display = 'none';
+            fileInfo.style.display = 'none';
             showNotification('Image cleared', 'success');
         }
 
@@ -1028,7 +966,7 @@
                 await navigator.clipboard.writeText(extractedText);
                 showNotification('Text copied to clipboard!', 'success');
             } catch (err) {
-                console.error('Failed to copy:', err);
+                console.error('Copy failed:', err);
                 showNotification('Failed to copy text', 'error');
             }
         }
@@ -1040,7 +978,6 @@
             
             charCount.textContent = `${chars} chars`;
             wordCount.textContent = `${words} words`;
-            languageSpan.textContent = languages[currentLanguage] || 'English';
         }
 
         function showNotification(message, type = 'info') {
@@ -1056,17 +993,42 @@
             
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 4000);
+            }, 3000);
         }
 
-        // Service Worker Registration
+        // Simple Service Worker for PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(() => {
-                    console.log('Service Worker registered');
-                }).catch(err => {
-                    console.log('Service Worker registration failed:', err);
-                });
+                // Create and register a simple service worker
+                const swContent = `
+                    self.addEventListener('install', event => {
+                        console.log('Service Worker installing.');
+                        event.waitUntil(self.skipWaiting());
+                    });
+                    
+                    self.addEventListener('activate', event => {
+                        console.log('Service Worker activating.');
+                        event.waitUntil(self.clients.claim());
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        // Cache-first strategy for static assets
+                        if (event.request.url.includes('/manifest.json')) {
+                            event.respondWith(
+                                caches.match(event.request).then(response => {
+                                    return response || fetch(event.request);
+                                })
+                            );
+                        }
+                    });
+                `;
+                
+                const blob = new Blob([swContent], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('Service Worker registered'))
+                    .catch(err => console.log('SW registration failed:', err));
             });
         }
     </script>
